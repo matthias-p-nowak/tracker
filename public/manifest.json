@@ -1,0 +1,13 @@
+{
+    "name": "Tracker - time and activity",
+    "short_name": "Tracker",
+    "description": "the ultimate time tracker app",
+    "start_url": "./index.html",
+    "icons":[
+        {
+            "src": "./tracker.png",
+            "type": "image/png",
+            "sizes": "64x64"
+        }
+    ]
+}

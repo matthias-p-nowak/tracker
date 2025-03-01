@@ -1,2 +1,3 @@
-# tracker
-tracking hours for invoicing with description
+# Tracker
+Tracking hours for invoicing with description.
+
