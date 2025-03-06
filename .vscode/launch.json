@@ -1,23 +1,23 @@
 {
     "version": "0.2.0",
     "configurations": [
-        // {
-        //     "name": "Launch dbUpgrade script",
-        //     "type": "php",
-        //     "request": "launch",
-        //     "program": "${workspaceRoot}/private/dbUpgrade.php",
-        //     "cwd": "${fileDirname}",
-        //     "port": 0,
-        //     "runtimeArgs": [
-        //         "-dxdebug.start_with_request=yes"
-        //     ],
-        //     "env": {
-        //         "XDEBUG_MODE": "debug,develop",
-        //         "XDEBUG_CONFIG": "client_port=${port}"
-        //     }
-        // },
         {
-            "name": "Launch Built-in web server",
+            "name": "Launch dbUpgrade script",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceRoot}/private/dbUpgrade.php",
+            "cwd": "${fileDirname}",
+            "port": 0,
+            "runtimeArgs": [
+                "-dxdebug.start_with_request=yes"
+            ],
+            "env": {
+                "XDEBUG_MODE": "debug,develop",
+                "XDEBUG_CONFIG": "client_port=${port}"
+            }
+        },
+        {
+            "name": "Debugging php with browser",
             "type": "php",
             "request": "launch",
             "runtimeArgs": [
@@ -26,14 +26,30 @@
                 "-S",
                 "0.0.0.0:3333"
             ],
-            "program": "",
             "cwd": "${workspaceRoot}",
             "port": 9003,
             "serverReadyAction": {
+                "action": "openExternally",
                 "pattern": "Development Server \\(http://0.0.0.0:([0-9]+)\\) started",
                 "uriFormat": "http://localhost:%s/public/index.html",
-                "action": "openExternally"
-            }
-        }
+                //"name": "Launch Browser"
+            },
+        },
+        {
+            "name": "Firefox",
+            "type": "firefox",
+            "request": "launch",
+            "firefoxArgs": [
+                "-ProfileManager",
+                "http://localhost:3333/public/index.html"
+            ],
+            "url": "http://localhost:3333/public/index.html"
+        },
+        // {
+        //     "name": "Launch Browser",
+        //     "type": "firefox",
+        //     "request": "launch",
+        //     "url": "http://localhost:3333/public/index.html"
+        // }
     ]
-}  
+}
