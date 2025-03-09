@@ -2,8 +2,9 @@
 
 namespace Code\Db;
 
+use Generator;
 use PDO;
-
+use PDOStatement;
 
 /**
  * Creating clause items
@@ -68,7 +69,6 @@ class DbCtx
         return self::$instance ?? new self();
     }
 
-
     /**
      * upgrading the database using an idempotent SQL script
      * @return void
@@ -95,7 +95,7 @@ class DbCtx
                     continue;
                 }
                 try {
-                    $stmt=$this->pdo->exec($sqlParts);
+                    $stmt = $this->pdo->exec($sqlParts);
                 } catch (\PDOException $e) {
                     $msg = $e->getMessage();
                     error_log("got an exception $msg");
@@ -106,5 +106,99 @@ class DbCtx
         }
     }
 
+    /**
+     * Basically a select, returns objects.
+     * @param array<int,mixed> $criteria
+     * @param string $tableName the table to get the rows from
+     * @return Generator<mixed> of Objects with a classname equal to that tableName
+     */
+    public function findRows(string $tableName, array $criteria = [], string $suffix = ''): Generator
+    {
+        $stmt = $this->fetchStmt($tableName, $criteria, $suffix);
+        while ($res = $stmt->fetchObject(__NAMESPACE__ . '\\' . $tableName)) {
+            $res->ctx = $this;
+            yield $res;
+        }
+    }
+
+    /**
+     * Executes select and returns statement to read from
+     * @return PDOStatement|bool
+     * @param array<int,mixed> $criteria
+     */
+    private function fetchStmt(string $tableName, array $criteria, string $suffix): PDOStatement | bool
+    {
+        $sql = 'select * from `' . $this->prefix . $tableName . '`';
+        if (count($criteria) > 0) {
+            $keys = array_keys($criteria);
+            $clause = makeClause($keys);
+            $sql .= ' where ' . implode(' and ', $clause);
+        }
+        $sql .= $suffix;
+        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' ' . $sql);
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($criteria as $key => $value) {
+            if ($stmt->bindValue(':' . $key, $value)) {
+            } else {
+                error_log(__FILE__ . ':' . __LINE__ . ' binding parameter ' . $key . ' failed');
+            };
+        }
+        $stmt->execute();
+        return $stmt;
+    }
+
+    /**
+     * @return void
+     * @param mixed $row
+     */
+    public function storeRow($row): void
+    {
+        $tableName = basename(str_replace('\\', '/', get_class($row)));
+        $rowDetails = $this->getRowDetails($tableName);
+        $columns2store = array_keys($rowDetails);
+        foreach ($columns2store as $idx => $propName) {
+            if (!property_exists($row, $propName)) {
+                unset($columns2store[$idx]);
+            }
+        }
+        // constructing the SQL
+        $sql = 'Replace into `' . $this->prefix . $tableName . '`( ' .
+        implode(', ', addBackQuotes($columns2store)) . ' ) ' .
+        ' values ( ' . implode(', ', prependColon($columns2store)) . ' )';
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($columns2store as $name) {
+            if (!$stmt->bindParam(':' . $name, $row->$name, $rowDetails[$name]->pdo_type)) {
+                error_log('error in parameter binding in DbCtx StoreRow name=' . $name);
+                return;
+            }
+        }
+        $r = $stmt->execute();
+    }
+
+    private array $allRowDetails;
+
+    /**
+     * For storing, we need to know what can be stored in the database
+     *
+     * @return array
+     */
+    public function getRowDetails(string $tableName): array
+    {
+        if (isset($this->allRowDetails[$tableName])) {
+            return $this->allRowDetails[$tableName];
+        }
+        // retrieve the columns to store, if available
+        $sql = 'Select * from `' . $this->prefix . $tableName . '` limit 0';
+        $stmt = $this->pdo->query($sql);
+        $columnCount = $stmt->columnCount();
+        $rowDetails = [];
+        for ($i = 0; $i < $columnCount; ++$i) {
+            $ci = $stmt->getColumnMeta($i);
+            $name = $ci['name'];
+            $rowDetails[$name] = (object) $ci;
+        }
+        $this->allRowDetails[$tableName] = $rowDetails;
+        return $rowDetails;
+    }
 
 }

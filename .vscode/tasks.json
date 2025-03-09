@@ -4,9 +4,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
-            "type": "shell",
-            "command": "echo Hello"
+            "label": "run sass",
+            "type": "process",
+            "detail": "Runs sass and watches for changes",
+            "command": "sass",
+            "args": [ "-w", "sass/main.scss", "public/main.css" ],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
+            }
         }
     ]
 }

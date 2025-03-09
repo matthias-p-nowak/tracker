@@ -35,7 +35,8 @@ end;
 create table if not exists `${prefix}Password` (
     `Hash` varchar(64),
     `Created` timestamp not null default current_timestamp primary key,
-    `Used` timestamp
+    `Used` timestamp,
+    `Cookie` char(64) not null
 );
 -- 2024-12-21 Event
 
@@ -108,4 +109,8 @@ if ${prefix}ColumnCount('Event','IP') < 1 then
     alter table `${prefix}Event` add column `IP` VARCHAR(255);
 end if;
 
--- 2025-01-03 and ...
+-- 2025-03-08 adding cookie
+if ${prefix}ColumnCount('Password','Cookie') < 1 then
+    alter table `${prefix}Password` add column `Cookie` char(64) not null default 'xxx';
+end if;
+-- 2025-03-09 added cookie

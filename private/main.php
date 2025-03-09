@@ -1,5 +1,5 @@
 <?php
-error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__);
+error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__);
 
 $config = join(DIRECTORY_SEPARATOR, [__DIR__, 'main.ini']);
 if (file_exists($config)) {
@@ -27,3 +27,27 @@ spl_autoload_extensions('.php');
 spl_autoload_register();
 
 session_start();
+
+try {
+    if(!isset($_SESSION['authenticated'])){
+        Code\Login::Check();
+        return;
+    }
+    $status = ($_SESSION['status'] ??= new stdClass());
+    
+    $res = $_SERVER['PATH_INFO'] ?? '/home';
+    match ($res) {
+        '/home' => Code\Tracker::ShowHome(),
+        default => error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__.' executing default action for '.$res ),
+    };
+} catch (Exception $ex) {
+    error_log("got exception", $ex);
+} finally {
+    $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
+    $time = number_format($time, 4);
+    $included = \get_included_files();
+    $incCnt = \count($included);
+    $files = \print_r($included, true);
+    error_log("used  $time seconds and $incCnt files: $files");
+}
+
