@@ -1,12 +1,4 @@
-(async function(){
-    console.log('ok is ok');
-    await import('./htmx-lite.js');
-    console.log('htmx imported');
-    let fd=new FormData();
-    hxl_send_form('tracker.php/home',fd,document.body); 
-})();
-
-window.getLocation=function() {
+function getLocation() {
     const options = {
         enableHighAccuracy: true,
         timeout: 30000,
@@ -31,7 +23,7 @@ window.getLocation=function() {
     });
 }
 
-window.register_event= async function(event) {
+async function register_event(event) {
     let form = event.target.form ?? event.target.closest('form');
     let formData = new FormData(form);
     if (event.target.hasAttribute('id')) {
@@ -52,7 +44,7 @@ window.register_event= async function(event) {
     hxl_send_form(action, formData, event.target);
 }
 
-window.more_callback= function(entries, observer){
+function more_callback(entries, observer){
     console.log('calling for more');
     let entry=entries[0];
     if(! entry.isIntersecting)
@@ -65,7 +57,7 @@ window.more_callback= function(entries, observer){
     hxl_send_form(action,formData,target);
 }
 
-window.watch4more=function(){
+function watch4more(){
     const sentinel= document.getElementById('sentinel');
     if(sentinel != null){
         const observer = new IntersectionObserver(more_callback);

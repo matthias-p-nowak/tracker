@@ -10,7 +10,7 @@ class Login
     /**
      * @return void
      */
-    public static function Check(): void
+    public static function Check_Login(): void
     {
         global $status, $config;
         $login = new Login();
@@ -21,7 +21,7 @@ class Login
             $cookie=$_COOKIE['tracker'];
             foreach ($pwdsIt as $pwEntry) {
                 if($cookie == $pwEntry->Cookie){
-                    self::GoodLogin($pwEntry);
+                    self::Good_Login($pwEntry);
                     return;
                 }
             }
@@ -37,7 +37,7 @@ class Login
                     $pwdsIt = $dbctx->findRows('Password');
                     foreach ($pwdsIt as $pwEntry) {
                         if (password_verify($pw, $pwEntry->Hash)) {
-                            self::GoodLogin($pwEntry);
+                            self::Good_Login($pwEntry);
                             return;
                         }
                     }
@@ -99,18 +99,12 @@ class Login
             $pw .= SELF::ALFABET[$i];
         }
         $cookie = \base64_encode(\random_bytes(48));
-        // $cookieOptions = array(
-        //     'expires' => time()+1209600,
-        //     'secure' => false,
-        //     'httponly' => false,
-        // );
-        // \setcookie('tracker', $cookie, $cookieOptions);
         $message = <<< EOM
-        Hello,
+            Hello,
 
-        please use the following password next time '$pw' (Remove the quotes).
+            please use the following password next time '$pw' (Remove the quotes).
 
-        Greetings
+            Greetings
         EOM;
         $adhead = ['From' => ($config->from ?? 'no from specified')];
         error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' sending password');
@@ -119,7 +113,7 @@ class Login
         $hpw = password_hash($pw, PASSWORD_DEFAULT);
         if ($r) {
             echo <<< EOM
-            <script>alert('An email has been sent. Wait for email and try again.');</script>
+                <script>alert('An email has been sent. Wait for email and try again.');</script>
             EOM;
             $pw = new Db\Password();
             $pw->Cookie = $cookie;
@@ -135,8 +129,11 @@ class Login
         }
 
     }
-
-    private static function GoodLogin($pwEntry)
+    /**
+     * @return void
+     * @param mixed $pwEntry the database entry for this login
+     */
+    private static function Good_Login($pwEntry): void
     {
         $now = new \DateTime('now');
         $pwEntry->Used = $now->format('Y-m-d H:i:s');
@@ -148,8 +145,10 @@ class Login
             'samesite' => 'Lax',
         );
         \setcookie('tracker', $pwEntry->Cookie, $cookieOptions);
-        Tracker::ShowHome();
+        Tracker::Show_Home();
         $_SESSION['authenticated']=true;
+        $dbctx=Db\DbCtx::getCtx();
+        // TODO find latest activity and store that
     }
 
 }

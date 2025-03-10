@@ -30,14 +30,16 @@ session_start();
 
 try {
     if(!isset($_SESSION['authenticated'])){
-        Code\Login::Check();
+        Code\Login::Check_Login();
         return;
     }
     $status = ($_SESSION['status'] ??= new stdClass());
     
     $res = $_SERVER['PATH_INFO'] ?? '/home';
     match ($res) {
-        '/home' => Code\Tracker::ShowHome(),
+        '/home' => Code\Tracker::Show_Home(),
+        '/change_mode' => Code\Tracker::Change_Mode(),
+        '/event_again' => Code\EventHandler::Event_Again(),
         default => error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__.' executing default action for '.$res ),
     };
 } catch (Exception $ex) {

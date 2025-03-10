@@ -201,4 +201,30 @@ class DbCtx
         return $rowDetails;
     }
 
+    /**
+     * 
+     * @return Generator
+     * @param array<int,mixed> $criteria
+     * @param string $sql 
+     * @param string $tableName - the class of returned objects
+     */
+    public function sqlAndRows(string $sql,string $tableName,array $criteria=[]): Generator
+    {
+        $sql = str_replace('${prefix}', $this->prefix, $sql);
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($criteria as $key => $value) {
+            if ($stmt->bindValue(':' . $key, $value)) {
+            } else {
+                error_log(__FILE__ . ':' . __LINE__ . ' binding parameter ' . $key . ' failed');
+            };
+        }
+        $stmt->execute();
+        if(!empty($tableName)){
+            while ($res = $stmt->fetchObject(__NAMESPACE__ . '\\' . $tableName)) {
+                $res->ctx = $this;
+                yield $res;
+            }
+        }
+    }
+
 }
