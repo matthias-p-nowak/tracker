@@ -104,3 +104,73 @@ div.boxed {
         background-color: blanchedalmond;
     }
 }
+
+div.table {
+    $border: thin solid #d0d0d0;
+    // border: $border;
+    border-radius: 0.5rem;
+    display: table;
+    margin: 1rem;
+    padding: 0.5rem;
+    .right {
+        text-align: right;
+    }
+    .row {
+        display: table-row;
+        // margin: 0.7rem;
+        // padding: 0.3rem;
+        // input {
+        //     outline: none;
+        //     // border: none;
+        // }
+        > * {
+            // margin: 0.5rem;
+            padding: 0.3rem;
+            display: table-cell;
+            border: $border;
+        }
+        .wide {
+            min-width: 20rem;
+        }
+        span:has(input[type="button"]){
+            text-align: right;
+        }
+        input[type="button"]{
+            border-radius: 0.3rem;
+            padding: 0.3rem;
+        }
+        select {
+            width: 100%;
+        }
+        span[name="delete"]{
+            color: red;
+            font-size: smaller;
+            text-align: center;
+            vertical-align: middle;
+            cursor: crosshair;
+        }
+    }
+}
+
+table {
+    border: thin solid #d0d0d0;
+    border-collapse: collapse;
+    .right{
+        text-align: right;
+    }
+    th,td {
+        border: thin solid #a0a0a0;
+        border-collapse: collapse;
+        padding: 0.5rem;
+    }
+}
+
+[data-tooltip]:hover::after {
+    display: block;
+    position: absolute;
+    content: attr(data-tooltip);
+    border: 1px solid #e0e0e0;
+    border-radius: 0.3rem;
+    background: #fff;
+    padding: .5rem;
+  }

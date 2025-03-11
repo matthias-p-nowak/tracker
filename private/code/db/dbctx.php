@@ -227,4 +227,50 @@ class DbCtx
         }
     }
 
+
+    /**
+     * deletes the rows that match the details
+     * @return void
+     * @param mixed $row
+     */
+    public function deleteRow($row): void
+    {
+        $tableName = basename(str_replace('\\', '/', get_class($row)));
+        $rowDetails = $this->getRowDetails($tableName);
+        $columns2store = array_keys($rowDetails);
+        foreach ($columns2store as $pos => $propName) {
+            if (!property_exists($row, $propName)) {
+                unset($columns2store[$pos]);
+            } else if (\is_null($row->$propName)) {
+                unset($columns2store[$pos]);
+            }
+        }
+        // constructing the SQL
+        $sql = 'DELETE FROM `' . $this->prefix . $tableName . '` where ' . implode(' and ', makeClause($columns2store));
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($columns2store as $col) {
+            $stmt->bindValue(':' . $col, $row->$col);
+        }
+        if (!$stmt->execute()) {
+            error_log(__FILE__ . ':' . __LINE__ . ' deleting row failed ' . $sql . ' row=' . print_r($row, true));
+        }
+    }
+
+        /**
+     * @return void
+     * @param array<int,mixed> $params the parameters to bind to the named
+     */
+    public function query(string $sql, array $params=[]): array 
+    {
+        $sql = str_replace('${prefix}', $this->prefix, $sql);
+        $stmt = $this->pdo->prepare($sql);
+        foreach($params as $key => $value){
+            $stmt->bindValue(':'.$key, $value);
+        }
+        $stmt->execute();
+        $res=$stmt->fetchAll();
+        return $res;
+    }
+
+
 }
