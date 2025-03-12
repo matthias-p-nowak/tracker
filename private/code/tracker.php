@@ -75,6 +75,7 @@ class Tracker
             'again' => $this->showAgainMain(),
             'edit' => $this->events2Edit(),
             'result' => $this->presentResults(),
+            'config' => $this->activities2Configure(),
             default => error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' ### showing main for ' . $status->mode)
         };
     }
@@ -266,6 +267,7 @@ class Tracker
     /**
      * @param array $week
      * @return void
+     * @param mixed $weekDates
      */
     private function printWeek(array $week,$weekDates): void
     {
@@ -299,6 +301,103 @@ class Tracker
         echo <<< EOM
             </tbody></table></div>
         EOM;
+    }
+    /**
+     * @return void
+     */
+    private function activities2Configure(): void
+    {
+        $scriptURL = $_SERVER['SCRIPT_NAME'];
+        $lt = '<!-- ' . __FILE__ . ':' . __LINE__ . ' ' . ' -->';
+        echo <<< EOM
+            <div id="main" x-action="replace">
+            $lt
+            <h2>Activities</h2>
+            <div id="hierarchy">
+        EOM;
+        $calc = new Calculator();
+        $calc->calcHierarchy();
+        foreach ($calc->levels as $activity => $level) {
+            if ($level > 0) {
+                continue;
+            }
+            $calc->showTree($activity);
+        }
+        echo <<< EOM
+            </div>
+            <form action="$scriptURL/show_activity" onsubmit="return false;" onclick="hxl_submit_form(event);">
+        EOM;
+        $this->showAllActivities();
+        echo <<< EOM
+            </form>
+            </div>
+        EOM;
+
+    }
+    /**
+     * @return void
+     * @param mixed $activity
+     */
+    public static function Show_Activity($activity): void
+    {
+        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__);
+        $scriptURL = $_SERVER['SCRIPT_NAME'];
+        // $activity=$_POST["name"];
+        $db = Db\DbCtx::getCtx();
+        $actRow = $db->findRows('Activity', ["Activity" => $activity])->current();
+        if (is_null($actRow)) {
+            $actRow = new Db\Activity();
+            $actRow->Activity = $activity;
+            $db->storeRow($actRow);
+        }
+        $cbChecked = $actRow->Results ? 'checked' : '';
+        $activities = $db->query('SELECT DISTINCT Activity FROM `${prefix}Event` order by Started desc');
+        $activities = array_map(fn($it) => $it[0], $activities);
+        $lt = '<!-- ' . __FILE__ . ':' . __LINE__ . ' ' . ' -->';
+        echo <<< EOM
+            <div id="main" x-action="replace">
+            $lt
+            <h2>Activity</h2>
+            <form action="$scriptURL/edit_activity" onsubmit="return false;" >
+            <input type="hidden" name="original" value="$activity">
+            <div class="table">
+            <div class="row">
+            <label class="right">Activity</label>
+            <input type="text" name="activity" value="$activity" placeholder="name for activity" onchange="hxl_submit_form(event);" >
+            </div>
+            <div class="row">
+            <span class="right">Time sheet</span>
+            <label for="results">
+            <input type="checkbox" name="results" id="results" $cbChecked onchange="hxl_submit_form(event);">
+            <span>create results</span>
+            </label>
+            </div>
+            <div class="row">
+            <label class="right" for="sel_parent">Parent project</label>
+            <span>
+            <select name="sel_parent" id="sel_parent" onchange="hxl_submit_form(event);" >
+        EOM;
+        foreach ($activities as $act) {
+            $selected = $act == $actRow->Parent ? ' selected ' : '';
+            echo <<< EOM
+                <option value="$act" $selected>$act</option>
+            EOM;
+        }
+        $selected = is_null($actRow->Parent) ? 'selected' : '';
+        echo <<< EOM
+            <option value="" $selected>-</option>
+            </select>
+            </span>
+            </div>
+            <div class="row">
+                <span></span>
+                <span><input type="button" name="delete" value="Delete" onclick="hxl_submit_form(event);"></span>
+            </div>
+            </div>
+            </form>
+            </div>
+        EOM;
+
     }
 
 }

@@ -38,11 +38,13 @@ try {
     $res = $_SERVER['PATH_INFO'] ?? '/home';
     match ($res) {
         '/change_mode' => Code\Tracker::Change_Mode(),
+        '/edit_activity' => Code\ConfigHandler::Edit_Activity(),
         '/edit_event' => Code\EventHandler::Edit_Event(),
         '/event_again' => Code\EventHandler::Event_Again(),
         '/home' => Code\Tracker::Show_Home(),
         '/more_events' => Code\EventHandler::More_Events(),
         '/more_results' => Code\Tracker::More_Results(),
+        '/show_activity' => Code\Tracker::Show_Activity($_POST['name']),
         '/show_event' => Code\EventHandler::Show_Event(),
         default => error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__.' executing default action for '.$res ),
     };

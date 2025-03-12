@@ -76,7 +76,7 @@ class EventHandler{
                 x-action="append" x-id="recents">
             $lt
             <input type="hidden" name="id" value="{$ev->Id}">
-            <span >{$ev->Started}</span><span>{$ev->Activity}</span><span>{$ev->Details}</span>
+            <span >{$ev->Started}</span><span>{$ev->Activity}<br >{$ev->Details}</span>
             <span>{$ev->IP}<br>{$ev->Latitude} / {$ev->Longitude}</span>
             <span name="delete">x</span>
             </form>
