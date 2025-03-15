@@ -71,7 +71,7 @@ class EventHandler{
         foreach ($evs as $ev) {
             $status->lastShown = $ev->Started;
             echo <<< EOM
-            <form  action="$scriptURL/show_event" class="row"
+            <form  action="$scriptURL/show_event" class="row" id="ev_$ev->Id"
                 onsubmit="return false;" onclick="hxl_submit_form(event);"
                 x-action="append" x-id="recents">
             $lt
@@ -111,7 +111,8 @@ class EventHandler{
         $tr = new Tracker();
         if('delete' == ($_POST['name'] ?? '')){
             $db->deleteRow($ev);
-            $tr->showMain();
+            $tr->deleteRow($ev);
+            //$tr->showMain();
         }else{
             $tr->editEvent($ev);
         }

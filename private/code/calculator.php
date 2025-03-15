@@ -120,13 +120,13 @@ class Calculator
      */
     public function showTree($activity): void
     {
-        $line=$activity;
+        $line='<span name="'.$activity.'">'.$activity.'</span>';
         if(isset($this->activities[$activity])){
             if($this->activities[$activity]->Results){
-                $line='<b>'.$line.'</b>';
+                $line='<b name="'.$activity.'">'.$line.'</b>';
             }
         }else{
-            $line='<em>'.$line.'</em>';
+            $line='<em name="'.$activity.'">'.$line.'</em>';
         }
         echo '<div>'.$line;
         foreach(($this->children[$activity] ?? []) as $child => $row){

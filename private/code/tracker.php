@@ -305,7 +305,7 @@ class Tracker
     /**
      * @return void
      */
-    private function activities2Configure(): void
+    public  function activities2Configure(): void
     {
         $scriptURL = $_SERVER['SCRIPT_NAME'];
         $lt = '<!-- ' . __FILE__ . ':' . __LINE__ . ' ' . ' -->';
@@ -314,6 +314,7 @@ class Tracker
             $lt
             <h2>Activities</h2>
             <div id="hierarchy">
+            <form action="$scriptURL/show_activity" onsubmit="return false;" onclick="hxl_submit_form(event);">
         EOM;
         $calc = new Calculator();
         $calc->calcHierarchy();
@@ -324,6 +325,7 @@ class Tracker
             $calc->showTree($activity);
         }
         echo <<< EOM
+            </form>
             </div>
             <form action="$scriptURL/show_activity" onsubmit="return false;" onclick="hxl_submit_form(event);">
         EOM;
@@ -341,6 +343,10 @@ class Tracker
     public static function Show_Activity($activity): void
     {
         error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__);
+        if(is_null($activity)){
+            error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__.' activity is null');
+            return;
+        }
         $scriptURL = $_SERVER['SCRIPT_NAME'];
         // $activity=$_POST["name"];
         $db = Db\DbCtx::getCtx();
@@ -398,6 +404,19 @@ class Tracker
             </div>
         EOM;
 
+    }
+
+    /**
+     * Removes the row with that id
+     * @return void
+     * @param mixed $ev
+     */
+    public function deleteRow($ev): void
+    {
+        error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__);
+        echo <<<EOM
+            <div id="ev_$ev->Id" x-action="remove"></div>
+        EOM;
     }
 
 }

@@ -90,7 +90,7 @@ class ConfigHandler
         $activity=$_POST['original'];
         $row=$db->findRows('Activity',['Activity' => $activity ])->current();
         $db->deleteRow($row);
-        $p = new Page();
-        $p->activities2Configure();
+        $tr = new Tracker();
+        $tr->activities2Configure();
     }
 }
