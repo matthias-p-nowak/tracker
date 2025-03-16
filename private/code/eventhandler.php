@@ -144,6 +144,11 @@ class EventHandler{
         $row->Details=$_POST['details'];
         $row->Started=$_POST['started'];
         $db->storeRow($row);
+        $now= new \DateTime();
+        $now=$now->format('H:i:s');
+        echo <<< EOM
+            <span id="ev_changed" x-action="replace">$now</span>
+        EOM;
     }
 
 }

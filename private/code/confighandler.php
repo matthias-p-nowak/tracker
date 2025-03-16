@@ -19,6 +19,10 @@ class ConfigHandler
             'sel_parent' => $ch->changeParent(),
             default => $ch->notYetImplemented(),
         };
+        $now = (new \DateTime())->format('H:i:s');
+        echo <<< EOM
+            <span id="conf_changed" x-action="replace">$now</span>
+        EOM;
     }
 
     /**

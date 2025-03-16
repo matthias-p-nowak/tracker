@@ -114,6 +114,7 @@ class Calculator
             }
         } while ($again);
     }
+    
     /**
      * @return void
      * @param mixed $activity

@@ -156,6 +156,8 @@ class Tracker
              <span>Position (Lat/Lon):</span>
              <span>{$ev->Latitude} / {$ev->Longitude}</span>
              </div>
+             <div class="row">
+             <span class="right">Changed:</span><span id="ev_changed"></span>
              </form>
              </div>
              </div>
@@ -356,7 +358,7 @@ class Tracker
             $actRow->Activity = $activity;
             $db->storeRow($actRow);
         }
-        $cbChecked = $actRow->Results ? 'checked' : '';
+        $cbChecked = ($actRow->Results ?? '') ? 'checked' : '';
         $activities = $db->query('SELECT DISTINCT Activity FROM `${prefix}Event` order by Started desc');
         $activities = array_map(fn($it) => $it[0], $activities);
         $lt = '<!-- ' . __FILE__ . ':' . __LINE__ . ' ' . ' -->';
@@ -384,7 +386,7 @@ class Tracker
             <select name="sel_parent" id="sel_parent" onchange="hxl_submit_form(event);" >
         EOM;
         foreach ($activities as $act) {
-            $selected = $act == $actRow->Parent ? ' selected ' : '';
+            $selected = $act == ($actRow->Parent ?? '') ? ' selected ' : '';
             echo <<< EOM
                 <option value="$act" $selected>$act</option>
             EOM;
@@ -398,6 +400,9 @@ class Tracker
             <div class="row">
                 <span></span>
                 <span><input type="button" name="delete" value="Delete" onclick="hxl_submit_form(event);"></span>
+            </div>
+            <div class="row">
+                <span class="right">Changed:</span><span id="conf_changed"></span>
             </div>
             </div>
             </form>
