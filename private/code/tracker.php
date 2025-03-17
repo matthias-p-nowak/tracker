@@ -252,7 +252,7 @@ class Tracker
                     $weekDates[$i]=$d->format('Y-m-d');
                 }
             }
-            $weekArr[$row->Activity][$row->WeekDay] = $row->DayAccount;
+            $weekArr[$row->Activity][$row->WeekDay] = $row->DayTotal;
         }
         if (count($weekArr) > 0) {
             $this->printWeek($weekArr,$weekDates);
