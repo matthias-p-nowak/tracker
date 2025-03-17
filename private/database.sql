@@ -76,6 +76,7 @@ create table if not exists `${prefix}Accounted` (
     `Sofar` float NOT NULL default 0,
     `Accounted` float NOT NULL default 0,
     `DayAccount` float NOT NULL default 0,
+    `DayTotal` float NOT NULL default 0,
     primary key (`Activity`,`day`)
 );
 
@@ -92,10 +93,6 @@ if ${prefix}ColumnCount('Accounted','Accounted') < 1 then
     alter table `${prefix}Accounted` add column `Accounted` float not null default 0;
 end if;
 
-
-if ${prefix}ColumnCount('Accounted','DayAccount') < 1 then
-    alter table `${prefix}Accounted` add column `DayAccount` float not null default 0;
-end if;
 
 -- 2024-12-30 getting on with configure
 
@@ -114,3 +111,14 @@ if ${prefix}ColumnCount('Password','Cookie') < 1 then
     alter table `${prefix}Password` add column `Cookie` char(64) not null default 'xxx';
 end if;
 -- 2025-03-09 added cookie
+
+if ${prefix}ColumnCount('Accounted','DayAccount') < 1 then
+    alter table `${prefix}Accounted` add column `DayAccount` float not null default 0;
+end if;
+
+if ${prefix}ColumnCount('Accounted','DayTotal') < 1 then
+    alter table `${prefix}Accounted` add column `DayTotal` float not null default 0;
+end if;
+
+-- 2025-03-17 for better accounting
+

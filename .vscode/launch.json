@@ -2,21 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch dbUpgrade script",
-            "type": "php",
-            "request": "launch",
-            "program": "${workspaceRoot}/private/dbUpgrade.php",
-            "cwd": "${fileDirname}",
-            "port": 0,
-            "runtimeArgs": [
-                "-dxdebug.start_with_request=yes"
-            ],
-            "env": {
-                "XDEBUG_MODE": "debug,develop",
-                "XDEBUG_CONFIG": "client_port=${port}"
-            }
-        },
-        {
             "name": "Debugging php with browser",
             "type": "php",
             "request": "launch",
@@ -26,6 +11,10 @@
                 "-S",
                 "0.0.0.0:3333"
             ],
+            "env": {
+                "XDEBUG_MODE": "debug,develop",
+                "XDEBUG_CONFIG": "client_port=${port}"
+            },
             "cwd": "${workspaceRoot}",
             "port": 9003,
             "serverReadyAction": {
@@ -34,6 +23,21 @@
                 "uriFormat": "http://localhost:%s/public/index.html",
                 //"name": "Launch Browser"
             },
+        },
+        {
+            "name": "Launch dbUpgrade script",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceRoot}/private/dbUpgrade.php",
+            "cwd": "${fileDirname}",
+            "port": 9003,
+            "runtimeArgs": [
+                "-dxdebug.start_with_request=yes"
+            ],
+            "env": {
+                "XDEBUG_MODE": "debug,develop",
+                "XDEBUG_CONFIG": "client_port=${port}"
+            }
         },
         {
             "name": "Firefox",

@@ -15,6 +15,7 @@ if (isset($config->timezone)) {
 $dbf = join(DIRECTORY_SEPARATOR, [__DIR__, 'code', 'db', 'dbctx.php']);
 require_once $dbf;
 $dbf = join(DIRECTORY_SEPARATOR, [__DIR__, 'database.sql']);
+error_log(__FILE__ . ':' . __LINE__.' running database upgrade');
 $dbctx = Code\Db\DbCtx::getCtx();
 $dbctx->upgradeDatabase($dbf);
 error_log(__FILE__ . ':' . __LINE__);
