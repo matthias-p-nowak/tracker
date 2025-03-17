@@ -2,28 +2,48 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debugging php with browser",
+            "name": "Launch Built-in web server",
             "type": "php",
             "request": "launch",
+            "runtimeExecutable": "php",
             "runtimeArgs": [
                 "-dxdebug.mode=debug",
                 "-dxdebug.start_with_request=yes",
                 "-S",
-                "0.0.0.0:3333"
+                "localhost:3333"
             ],
-            "env": {
-                "XDEBUG_MODE": "debug,develop",
-                "XDEBUG_CONFIG": "client_port=${port}"
-            },
+            "program": "",
             "cwd": "${workspaceRoot}",
             "port": 9003,
             "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "Development Server \\(http://0.0.0.0:([0-9]+)\\) started",
+                "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
                 "uriFormat": "http://localhost:%s/public/index.html",
-                //"name": "Launch Browser"
-            },
+                "action": "openExternally"
+            }
         },
+        // {
+        //     "name": "Debugging php with browser",
+        //     "type": "php",
+        //     "request": "launch",
+        //     "runtimeArgs": [
+        //         "-dxdebug.mode=debug",
+        //         "-dxdebug.start_with_request=yes",
+        //         "-S",
+        //         "0.0.0.0:3333"
+        //     ],
+        //     "env": {
+        //         "XDEBUG_MODE": "debug,develop",
+        //         "XDEBUG_CONFIG": "client_port=${port}"
+        //     },
+        //     "cwd": "${workspaceRoot}",
+        //     "port": 9003,
+        //     "serverReadyAction": {
+        //         "action": "openExternally",
+        //         "pattern": "Development Server \\(http://0.0.0.0:([0-9]+)\\) started",
+        //         "uriFormat": "http://localhost:%s/public/index.html",
+        //         //"name": "Launch Browser"
+        //     },
+        // },
         {
             "name": "Launch dbUpgrade script",
             "type": "php",
@@ -38,17 +58,18 @@
                 "XDEBUG_MODE": "debug,develop",
                 "XDEBUG_CONFIG": "client_port=${port}"
             }
-        },
-        {
-            "name": "Firefox",
-            "type": "firefox",
-            "request": "launch",
-            "firefoxArgs": [
-                "-ProfileManager",
-                "http://localhost:3333/public/index.html"
-            ],
-            "url": "http://localhost:3333/public/index.html"
-        },
+        }
+        // ,
+        // {
+        //     "name": "Firefox",
+        //     "type": "firefox",
+        //     "request": "launch",
+        //     "firefoxArgs": [
+        //         "-ProfileManager",
+        //         "http://localhost:3333/public/index.html"
+        //     ],
+        //     "url": "http://localhost:3333/public/index.html"
+        // },
         // {
         //     "name": "Launch Browser",
         //     "type": "firefox",

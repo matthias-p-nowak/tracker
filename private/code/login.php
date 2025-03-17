@@ -109,7 +109,7 @@ class Login
         $adhead = ['From' => ($config->from ?? 'no from specified')];
         error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' sending password');
         $r = \mail($email, 'password provided', $message, $adhead);
-        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . "${r}");
+        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . "{$r}");
         $hpw = password_hash($pw, PASSWORD_DEFAULT);
         if ($r) {
             echo <<< EOM
