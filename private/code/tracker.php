@@ -110,8 +110,11 @@ class Tracker
         echo '<div class="boxed">';
         $sql = <<< 'EOS'
             WITH C_RN AS (
-            SELECT *, ROW_NUMBER() OVER (PARTITION BY Activity order by Started DESC) AS RN FROM ${prefix}Event
-            ) SELECT * from C_RN WHERE RN=1 ORDER By Started DESC
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY Activity order by Started DESC) AS RN 
+            FROM ${prefix}Event
+            ) SELECT 
+            Id, Activity, Details, Started, Ended, IP, Latitude, Longitude 
+            from C_RN WHERE RN=1 ORDER By Started DESC
         EOS;
         foreach ($dbCtx->sqlAndRows($sql, 'Event') as $ev) {
             echo <<< EOM

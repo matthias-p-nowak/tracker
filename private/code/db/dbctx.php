@@ -224,6 +224,8 @@ class DbCtx
                 $res->ctx = $this;
                 yield $res;
             }
+        }else{
+            error_log(__FILE__.':'.__LINE__. ' '. __FUNCTION__.' empty argument for table name');
         }
     }
 
