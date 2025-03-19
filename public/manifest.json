@@ -2,7 +2,7 @@
     "name": "Tracker - time and activity",
     "short_name": "Tracker",
     "description": "the ultimate time tracker app",
-    "display": "browser",
+    "display": "standalone",
     "start_url": ".",
     "icons":[
         {
