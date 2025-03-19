@@ -1,7 +1,14 @@
 <?php
 namespace Code\Db;
 
-#[\AllowDynamicProperties]
+
 class Accounted {
-    
+    public string $Activity;
+    public int $Day;
+    public int $YearWeek;
+    public int $WeekDay;
+    public float $Sofar;
+    public float $Accounted;
+    public float $DayAccount;
+    public float $DayTotal;
 }
