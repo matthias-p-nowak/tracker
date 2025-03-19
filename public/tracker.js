@@ -5,6 +5,8 @@
     let fd=new FormData();
     hxl_send_form('tracker.php/home',fd,document.body); 
     let registration = await navigator.serviceWorker.register("service.js");
+    result = await Notification.requestPermission();
+    console.log("Notification permission:", result);
     await navigator.serviceWorker.ready;
     if (registration.active) {
       console.log("Service worker is active");
