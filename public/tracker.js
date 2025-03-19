@@ -4,7 +4,7 @@
     console.log('htmx imported');
     let fd=new FormData();
     hxl_send_form('tracker.php/home',fd,document.body); 
-    let registration = await navigator.serviceWorker.register("serviceworker.js");
+    let registration = await navigator.serviceWorker.register("service.js");
     await navigator.serviceWorker.ready;
     if (registration.active) {
       console.log("Service worker is active");
