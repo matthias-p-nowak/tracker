@@ -7,4 +7,5 @@ class Password {
     public string $Cookie;
     public ?string $Created;
     public ?string $Used;
+    public DbCtx $ctx;
 }

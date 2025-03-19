@@ -20,5 +20,22 @@
             "type": "image/png",
             "sizes": "192x192"
         }
+    ],
+    "screenshots": [
+        {
+            "src": "./tracker.png",
+            "type": "image/png",
+            "sizes": "64x64"
+        },
+        {
+            "src": "./tracker512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "./tracker192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        }
     ]
 }

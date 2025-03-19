@@ -1,6 +1,0 @@
-{
-    "indexer.exclude_patterns": [
-      "diary/**/*"
-    ]
-  }
-  

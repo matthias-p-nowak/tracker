@@ -4,6 +4,26 @@
     console.log('htmx imported');
     let fd=new FormData();
     hxl_send_form('tracker.php/home',fd,document.body); 
+    let registration = await navigator.serviceWorker.register("serviceworker.js");
+    await navigator.serviceWorker.ready;
+    if (registration.active) {
+      console.log("Service worker is active");
+    } else {
+      console.log("Service worker not active");
+    }
+    window.addEventListener("beforeinstallprompt", (event) => {
+        console.log("Before install prompt");
+        let installPrompt = event;
+        const installButton = document.querySelector("#install");
+        installButton.classList.remove("hidden");
+        installButton.addEventListener("click", async () => {
+          const result = await installPrompt.prompt();
+          console.log(`Install prompt was: ${result.outcome}`);
+          installPrompt = null;
+          installButton.classList.add("hidden");
+          console.log("Install button clicked");
+        });
+      }); 
 })();
 
 window.getLocation=function() {

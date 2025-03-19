@@ -11,4 +11,5 @@ class Event{
     public ?string $IP;
     public ?float $Latitude;
     public ?float $Longitude;
+    public DbCtx $ctx;
 }

@@ -11,4 +11,5 @@ class Accounted {
     public float $Accounted;
     public float $DayAccount;
     public float $DayTotal;
+    public DbCtx $ctx;
 }
