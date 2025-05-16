@@ -108,6 +108,7 @@ class Tracker
     {
         $dbCtx = Db\DbCtx::getCtx();
         echo '<div class="boxed">';
+        $empty=true;
         $sql = <<< 'EOS'
             WITH C_RN AS (
             SELECT *, ROW_NUMBER() OVER (PARTITION BY Activity order by Started DESC) AS RN 
@@ -120,6 +121,10 @@ class Tracker
             echo <<< EOM
                 <div id="{$ev->Id}" name="{$ev->Activity}">{$ev->Activity}</div>
             EOM;
+            $empty=false;
+        }
+        if($empty){
+            echo '<div id="-1" name="nothing">nothing yet</div>';
         }
         echo '</div>';
     }
@@ -359,6 +364,7 @@ class Tracker
         if (is_null($actRow)) {
             $actRow = new Db\Activity();
             $actRow->Activity = $activity;
+            $actRow->Results = 0;
             $db->storeRow($actRow);
         }
         $cbChecked = ($actRow->Results ?? '') ? 'checked' : '';

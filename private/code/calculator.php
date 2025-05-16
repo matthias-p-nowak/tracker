@@ -20,6 +20,11 @@ class Calculator
         error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' calculating...');
         $db = Db\DbCtx::getCtx();
         $sql = <<< 'EOS'
+            -- get ended
+            UPDATE ${prefix}Event e JOIN (
+            SELECT Started, LAG(Started) OVER( ORDER BY Started DESC ) AS 'Ended' FROM ${prefix}Event) c on e.Started=c.Started
+            set e.Ended=c.Ended;
+            -- truncate
             TRUNCATE ${prefix}Accounted;
              -- summarize work
             INSERT INTO `${prefix}Accounted` (`Activity`, `Day`, `YearWeek`, `WeekDay`, `Sofar`) 
@@ -27,7 +32,7 @@ class Calculator
             (
             SELECT 
              e.Activity, 
-             e.Started, TIMESTAMPDIFF(SECOND, e.Started, e.Ended) / 3600 AS 'hours', TO_DAYS(e.started) AS 'day', YEARWEEK(e.Started,3) AS 'yearweek', WEEKDAY(e.Started) AS 'weekday'
+             e.Started, TIMESTAMPDIFF(SECOND, e.Started, e.Ended) / 3600 AS 'hours', TO_DAYS(e.Started) AS 'day', YEARWEEK(e.Started,3) AS 'yearweek', WEEKDAY(e.Started) AS 'weekday'
             FROM 
             ${prefix}Event e JOIN ${prefix}Activity a ON e.Activity=a.Activity
             WHERE a.Results=1 ),

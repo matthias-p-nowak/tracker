@@ -3,7 +3,7 @@
 namespace Code\Db;
 
 class Event{
-    public int $Id;
+    public ?int $Id;
     public ?string $Activity;
     public ?string $Details;
     public ?string $Started;

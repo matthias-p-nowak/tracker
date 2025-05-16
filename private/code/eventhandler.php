@@ -10,7 +10,7 @@ class EventHandler{
     public static function Event_Again(): void
     {
         global $status;
-        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . print_r($_POST, true));
+        error_log(__FILE__ . ':' . __LINE__ . ' ' . __FUNCTION__ . ' with data '. print_r($_POST, true));
         if (isset($_POST['error'])) {
             error_log($_POST['error']);
         }

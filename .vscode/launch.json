@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Built-in web server",
+            "name": "php web server",
             "type": "php",
             "request": "launch",
             "runtimeExecutable": "php",
@@ -10,17 +10,17 @@
                 "-dxdebug.mode=debug",
                 "-dxdebug.start_with_request=yes",
                 "-S",
-                "localhost:3333",
+                "0.0.0.0:3333",
             ],
             "program": "",
             "cwd": "${workspaceRoot}",
             "port": 9003,
             "serverReadyAction": {
-                "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
+                "pattern": "Development Server \\(http://.*:([0-9]+)\\) started",
                 "uriFormat": "http://localhost:%s/public/index.html",
                 "action": "openExternally"
             }
-        },       
+        },        
         {
             "name": "Launch dbUpgrade script",
             "type": "php",
